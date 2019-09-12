@@ -7,7 +7,7 @@ amqp.connect("amqp://leon:root@192.168.99.100", function (err, connection) {
         if (err) throw err;
 
         let exchange = "direct_logs";
-        let severity = "warning";//can be : info/warning/error
+        let severity = "error";//can be : info/warning/error
         channel.assertExchange(exchange, "direct", { durable: false });
         console.log(' [*] Waiting for logs. To exit press CTRL+C');
         channel.assertQueue("", { exclusive: true }, function (err, q) {
