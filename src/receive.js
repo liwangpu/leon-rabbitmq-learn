@@ -6,17 +6,23 @@ amqp.connect("amqp://leon:root@192.168.99.100", function (err, connection) {
     connection.createChannel(function (err, channel) {
         if (err) throw err;
 
-        var queue = 'hello';
+        var queue = 'task_queue';
 
         channel.assertQueue(queue, {
-            durable: false
+            durable: true
         });
 
         console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
 
         channel.consume(queue, function (msg) {
             console.log(" [x] Received %s", msg.content.toString());
-        }, { noAck: true });
+
+            setTimeout(() => {
+                console.log(" [x] Done");
+                channel.ack(msg);
+            }, 5000);
+
+        }, { noAck: false });
 
     });//createChannel
 
