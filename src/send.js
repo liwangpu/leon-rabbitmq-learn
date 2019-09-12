@@ -6,14 +6,12 @@ amqp.connect("amqp://leon:root@192.168.99.100", function (err, connection) {
     connection.createChannel(function (err, channel) {
         if (err) throw err;
 
-        var queue = 'task_queue';
-        var msg = 'Hello task queue';
+        let exchange = "my_logs";
+        let msg = 'Hello publish/subscribe';
 
-        channel.assertQueue(queue, {
-            durable: true
-        });
+        channel.assertExchange(exchange, "fanout", { durable: false });
 
-        channel.sendToQueue(queue, Buffer.from(msg), { persistent: true });
+        channel.publish(exchange, "", Buffer.from(msg));
         console.log(" [x] Sent %s", msg);
 
     });//createChannel

@@ -6,23 +6,37 @@ amqp.connect("amqp://leon:root@192.168.99.100", function (err, connection) {
     connection.createChannel(function (err, channel) {
         if (err) throw err;
 
-        var queue = 'task_queue';
+        let exchange = "my_logs";
 
-        channel.assertQueue(queue, {
-            durable: true
-        });
+        channel.assertExchange(exchange, "fanout", { durable: false });
 
-        console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
+        channel.assertQueue("", { exclusive: true }, function (err, q) {
+            if (err) throw err;
 
-        channel.consume(queue, function (msg) {
-            console.log(" [x] Received %s", msg.content.toString());
+            channel.bindQueue(q.queue, exchange, '');
 
-            setTimeout(() => {
-                console.log(" [x] Done");
-                channel.ack(msg);
-            }, 5000);
+            channel.consume(q.queue, function (msg) {
 
-        }, { noAck: false });
+                if (msg.content)
+                    console.log(" [x] %s", msg.content.toString());
+
+            }, { noAck: true });//consume
+
+
+        });//assertQueue
+
+
+        // console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
+
+        // channel.consume(queue, function (msg) {
+        //     console.log(" [x] Received %s", msg.content.toString());
+
+        //     setTimeout(() => {
+        //         console.log(" [x] Done");
+        //         channel.ack(msg);
+        //     }, 5000);
+
+        // }, { noAck: false });
 
     });//createChannel
 
