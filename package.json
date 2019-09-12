@@ -1,0 +1,20 @@
+{
+  "name": "rabbitmq-learn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "send": "nodemon ./src/send.js",
+    "receive": "node ./src/receive.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.5"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
+}
